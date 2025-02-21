@@ -9,7 +9,7 @@
 git submodule update --init --recursive
 ```
 
-4. Run `docker compose up --build`.
+4. Run command `docker compose up --build`.
 
 5. **Add the submodule**
    - Replace `<repository_url>` with the URL of the submodule repository.
