@@ -14,7 +14,9 @@ services:
     environment:
       - PORT=3000
       - NATS_SERVERS=nats://nats-server:4222
-
+  #--------------------------------------
+  # Products MS
+  #--------------------------------------
   products-ms:
     build: ./products-ms
     volumes:
@@ -26,7 +28,9 @@ services:
       - NATS_SERVERS=nats://nats-server:4222
       - DATABASE_URL=file:./dev.db
 
+  #--------------------------------------
   # Orders MS
+  #--------------------------------------
   orders-ms:
     depends_on:
       - orders-db
@@ -40,7 +44,9 @@ services:
       - DATABASE_URL=postgresql://admin:admin@orders-db:5432/orders_db?schema=public
       - NATS_SERVERS=nats://nats-server:4222
 
-  # Orders DB
+  #--------------------------------------
+  # Orders Database
+  #--------------------------------------
   orders-db:
     container_name: orders_database
     image: postgres:14
@@ -53,3 +59,22 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=orders_db
+  #--------------------------------------
+  # Payments MS
+  #--------------------------------------
+  payments-ms:
+    build: ./payments-ms
+    ports:
+      - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}
+    volumes:
+      - ./payments-ms/src:/usr/src/app/src
+      - ./payments-ms/node_modules:/usr/src/app/node_modules
+    command: npm run start:dev
+    environment:
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_SUCCESS_URL=${STRIPE_SUCCESS_URL}
+      - STRIPE_CANCEL_URL=${STRIPE_CANCEL_URL}
+      - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
+      - STRIPE_ENDPOINT_SECRET_TEST=${STRIPE_ENDPOINT_SECRET_TEST}
+      - PORT=${PAYMENTS_MS_PORT}
+      - NATS_SERVERS=nats://nats-server:4222
