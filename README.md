@@ -46,3 +46,11 @@ When working with a repository that contains submodules:
 
 🔑 **Why?**  
 If you push to the main repository before updating the submodule, the references to the submodules in the main repository will be lost, potentially causing conflicts.
+
+### Steps to Prod
+1. **Clone the repository to your local machine**
+2. Copy from env.example to .env
+3. run command
+```bash
+docker compose -f docker-compose.prod.yml build
+```
